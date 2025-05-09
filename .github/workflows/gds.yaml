@@ -18,12 +18,6 @@ jobs:
         with:
           pdk: ihp
 
-      - name: Upload GDS Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: gds-artifact
-          path: path/to/gds/output
-
   precheck:
     needs: gds
     runs-on: ubuntu-24.04
@@ -54,13 +48,4 @@ jobs:
       pages: write # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
     steps:
-      - name: Download GDS Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: gds-artifact
-          path: path/to/download
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-        with:
-          artifact-name: gds-artifact
+      - uses: TinyTapeout/tt-gds-action/viewer@ttihp25b
