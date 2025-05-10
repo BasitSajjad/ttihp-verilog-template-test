@@ -1,4 +1,4 @@
-module tb_sha256();
+module tb();
 
 // DUT signals
 reg clk;
