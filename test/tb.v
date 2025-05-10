@@ -15,7 +15,7 @@ reg [7:0] expected_hash[0:31];
 integer errors;
 
 // Instantiate the DUT
-sha256_shift_reg dut (
+tt_um_sha256_shift_reg dut (
     .clk(clk),
     .reset_n(reset_n),
     .data_in(data_in),
