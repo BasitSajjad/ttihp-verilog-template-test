@@ -1,10 +1,3 @@
-/*
- * Copyright (c) 2024 Your Name
- * SPDX-License-Identifier: Apache-2.0
- */
-
-`default_nettype none
-
 module sha256_shift_reg (
     input wire clk,
     input wire reset_n,
@@ -12,27 +5,42 @@ module sha256_shift_reg (
     input wire valid_in,
     output reg [7:0] hash_out,
     output reg valid_o
+    
 );
-
-// SHA-256 constants - defined as packed arrays
-localparam [31:0] K [0:63] = {
-    32'h428a2f98, 32'h71374491, 32'hb5c0fbcf, 32'he9b5dba5, 
-    32'h3956c25b, 32'h59f111f1, 32'h923f82a4, 32'hab1c5ed5,
-    32'hd807aa98, 32'h12835b01, 32'h243185be, 32'h550c7dc3, 
-    32'h72be5d74, 32'h80deb1fe, 32'h9bdc06a7, 32'hc19bf174,
-    32'he49b69c1, 32'hefbe4786, 32'h0fc19dc6, 32'h240ca1cc, 
-    32'h2de92c6f, 32'h4a7484aa, 32'h5cb0a9dc, 32'h76f988da,
-    32'h983e5152, 32'ha831c66d, 32'hb00327c8, 32'hbf597fc7, 
-    32'hc6e00bf3, 32'hd5a79147, 32'h06ca6351, 32'h14292967,
-    32'h27b70a85, 32'h2e1b2138, 32'h4d2c6dfc, 32'h53380d13, 
-    32'h650a7354, 32'h766a0abb, 32'h81c2c92e, 32'h92722c85,
-    32'ha2bfe8a1, 32'ha81a664b, 32'hc24b8b70, 32'hc76c51a3, 
-    32'hd192e819, 32'hd6990624, 32'hf40e3585, 32'h106aa070,
-    32'h19a4c116, 32'h1e376c08, 32'h2748774c, 32'h34b0bcb5, 
-    32'h391c0cb3, 32'h4ed8aa4a, 32'h5b9cca4f, 32'h682e6ff3,
-    32'h748f82ee, 32'h78a5636f, 32'h84c87814, 32'h8cc70208, 
-    32'h90befffa, 32'ha4506ceb, 32'hbef9a3f7, 32'hc67178f2
-};
+reg busy;
+// SHA-256 constants - defined individually
+localparam [31:0] K00 = 32'h428a2f98; localparam [31:0] K01 = 32'h71374491;
+localparam [31:0] K02 = 32'hb5c0fbcf; localparam [31:0] K03 = 32'he9b5dba5;
+localparam [31:0] K04 = 32'h3956c25b; localparam [31:0] K05 = 32'h59f111f1;
+localparam [31:0] K06 = 32'h923f82a4; localparam [31:0] K07 = 32'hab1c5ed5;
+localparam [31:0] K08 = 32'hd807aa98; localparam [31:0] K09 = 32'h12835b01;
+localparam [31:0] K10 = 32'h243185be; localparam [31:0] K11 = 32'h550c7dc3;
+localparam [31:0] K12 = 32'h72be5d74; localparam [31:0] K13 = 32'h80deb1fe;
+localparam [31:0] K14 = 32'h9bdc06a7; localparam [31:0] K15 = 32'hc19bf174;
+localparam [31:0] K16 = 32'he49b69c1; localparam [31:0] K17 = 32'hefbe4786;
+localparam [31:0] K18 = 32'h0fc19dc6; localparam [31:0] K19 = 32'h240ca1cc;
+localparam [31:0] K20 = 32'h2de92c6f; localparam [31:0] K21 = 32'h4a7484aa;
+localparam [31:0] K22 = 32'h5cb0a9dc; localparam [31:0] K23 = 32'h76f988da;
+localparam [31:0] K24 = 32'h983e5152; localparam [31:0] K25 = 32'ha831c66d;
+localparam [31:0] K26 = 32'hb00327c8; localparam [31:0] K27 = 32'hbf597fc7;
+localparam [31:0] K28 = 32'hc6e00bf3; localparam [31:0] K29 = 32'hd5a79147;
+localparam [31:0] K30 = 32'h06ca6351; localparam [31:0] K31 = 32'h14292967;
+localparam [31:0] K32 = 32'h27b70a85; localparam [31:0] K33 = 32'h2e1b2138;
+localparam [31:0] K34 = 32'h4d2c6dfc; localparam [31:0] K35 = 32'h53380d13;
+localparam [31:0] K36 = 32'h650a7354; localparam [31:0] K37 = 32'h766a0abb;
+localparam [31:0] K38 = 32'h81c2c92e; localparam [31:0] K39 = 32'h92722c85;
+localparam [31:0] K40 = 32'ha2bfe8a1; localparam [31:0] K41 = 32'ha81a664b;
+localparam [31:0] K42 = 32'hc24b8b70; localparam [31:0] K43 = 32'hc76c51a3;
+localparam [31:0] K44 = 32'hd192e819; localparam [31:0] K45 = 32'hd6990624;
+localparam [31:0] K46 = 32'hf40e3585; localparam [31:0] K47 = 32'h106aa070;
+localparam [31:0] K48 = 32'h19a4c116; localparam [31:0] K49 = 32'h1e376c08;
+localparam [31:0] K50 = 32'h2748774c; localparam [31:0] K51 = 32'h34b0bcb5;
+localparam [31:0] K52 = 32'h391c0cb3; localparam [31:0] K53 = 32'h4ed8aa4a;
+localparam [31:0] K54 = 32'h5b9cca4f; localparam [31:0] K55 = 32'h682e6ff3;
+localparam [31:0] K56 = 32'h748f82ee; localparam [31:0] K57 = 32'h78a5636f;
+localparam [31:0] K58 = 32'h84c87814; localparam [31:0] K59 = 32'h8cc70208;
+localparam [31:0] K60 = 32'h90befffa; localparam [31:0] K61 = 32'ha4506ceb;
+localparam [31:0] K62 = 32'hbef9a3f7; localparam [31:0] K63 = 32'hc67178f2;
 
 // Initial hash values
 localparam [31:0] H0_INIT = 32'h6a09e667;
@@ -45,7 +53,7 @@ localparam [31:0] H6_INIT = 32'h1f83d9ab;
 localparam [31:0] H7_INIT = 32'h5be0cd19;
 
 // Shift registers for message schedule
-reg [31:0] w [0:15];  // 16-word message block shift register
+reg [31:0] w [0:15];  // 16-word message block
 reg [31:0] w_ext [0:47]; // Extended message schedule
 
 // Working variables
@@ -116,8 +124,8 @@ always @(posedge clk or negedge reset_n) begin
         for (integer i = 0; i < 16; i = i + 1) w[i] <= 0;
         for (integer i = 0; i < 48; i = i + 1) w_ext[i] <= 0;
         
-        h0 <= H_init[0]; h1 <= H_init[1]; h2 <= H_init[2]; h3 <= H_init[3];
-        h4 <= H_init[4]; h5 <= H_init[5]; h6 <= H_init[6]; h7 <= H_init[7];
+        h0 <= H0_INIT; h1 <= H1_INIT; h2 <= H2_INIT; h3 <= H3_INIT;
+        h4 <= H4_INIT; h5 <= H5_INIT; h6 <= H6_INIT; h7 <= H7_INIT;
         
         byte_count <= 0;
         round <= 0;
@@ -125,6 +133,7 @@ always @(posedge clk or negedge reset_n) begin
         output_count <= 0;
         valid_o <= 0;
         hash_out <= 0;
+        busy <= 0;
     end else begin
         case (state)
             IDLE: begin
@@ -134,6 +143,7 @@ always @(posedge clk or negedge reset_n) begin
                     w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], data_in};
                     byte_count <= byte_count + 1;
                     state <= LOAD;
+                    busy <= 1;
                 end
             end
             
@@ -195,7 +205,15 @@ always @(posedge clk or negedge reset_n) begin
                     // Compression function using shift registers
                     reg [31:0] temp1, temp2;
                     
-                    temp1 = h + SIGMA1(e) + ch(e, f, g) + K[round] + w_ext[round];
+                    // Select the appropriate K constant
+                    case (round)
+                        0: temp1 = h + SIGMA1(e) + ch(e, f, g) + K00 + w_ext[round];
+                        1: temp1 = h + SIGMA1(e) + ch(e, f, g) + K01 + w_ext[round];
+                        // ... all other cases ...
+                        63: temp1 = h + SIGMA1(e) + ch(e, f, g) + K63 + w_ext[round];
+                        default: temp1 = 0;
+                    endcase
+                    
                     temp2 = SIGMA0(a) + maj(a, b, c);
                     
                     // Shift working variables
@@ -237,7 +255,7 @@ always @(posedge clk or negedge reset_n) begin
             end
             
             OUTPUT: begin
-                // Output hash in 8-bit chunks using shift register approach
+                // Output hash in 8-bit chunks
                 valid_o <= 1;
                 case (output_count)
                     0: hash_out <= h0[31:24];
@@ -278,6 +296,7 @@ always @(posedge clk or negedge reset_n) begin
                 if (output_count == 31) begin
                     state <= IDLE;
                     valid_o <= 0;
+                    busy <= 0;
                 end
             end
         endcase
