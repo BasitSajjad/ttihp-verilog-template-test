@@ -1,4 +1,4 @@
-module sha256_shift_reg (
+module tt_um_sha256_shift_reg (
     input wire clk,
     input wire reset_n,
     input wire [7:0] data_in,
