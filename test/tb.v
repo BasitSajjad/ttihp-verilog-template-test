@@ -4,7 +4,7 @@ module tb();
 reg clk;
 reg rst_n;
 reg ena;
-reg [7:0] ui;
+    reg [7:0] ui_in;
 reg [7:0] uio_in;
 wire [7:0] uo_out;
 wire [7:0] uio_out;
@@ -21,7 +21,7 @@ tt_um_sha256_shift_reg dut (
     .clk(clk),
     .rst_n(rst_n),
     .ena(1'b1),
-    .ui(ui),
+    .ui_in(ui),
     .uio_out({uio_out}),
     .uio_in({7'b0, uio_in[0]}),
     .uio_oe(uio_oe),
