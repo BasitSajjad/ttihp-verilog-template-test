@@ -22,9 +22,9 @@ tt_um_sha256_shift_reg dut (
     .reset_n(reset_n),
     .ena(1'b1),
     .ui(ui),
-    .uio_out({6'b0, uio_out[1],1'b0}),
+    .uio_out({uio_out}),
     .uio_in({7'b0, uio_in[0]}),
-    .uio_oe({6'b0, 1'b1, 1'b0}),
+    .uio_oe(uio_oe),
     .uo(uo)
 );
 endmodule
