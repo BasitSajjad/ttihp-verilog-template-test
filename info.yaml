@@ -45,6 +45,12 @@ pinout:
   # Valid, busy ports
   uio[0]: "valid_in"
   uio[1]: "valid_o"
+  uio[2]: ""
+  uio[3]: ""
+  uio[4]: ""
+  uio[5]: ""
+  uio[6]: ""
+  uio[7]: ""
 
 
 # Do not change!
