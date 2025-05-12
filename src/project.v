@@ -6,7 +6,7 @@ module tt_um_sha256_shift_reg (
     output reg [7:0] uio_out,  // IOs: Output path
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
-    output reg [7:0] uo
+    output reg [7:0] uo_out
 );
 reg busy;
 // SHA-256 constants - defined individually
@@ -133,7 +133,7 @@ always @(posedge clk or negedge rst_n) begin
         state <= IDLE;
         output_count <= 0;
         uio_out[1] <= 0;
-        uo <= 0;
+        uo_out <= 0;
         busy <= 0;
     end else begin
         case (state)
