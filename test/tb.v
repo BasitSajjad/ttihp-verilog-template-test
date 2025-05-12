@@ -20,7 +20,7 @@ integer errors;
 tt_um_sha256_shift_reg dut (
     .clk(clk),
     .reset_n(reset_n),
-    .ena(ena),
+    .ena(1'b1),
     .ui(ui),
     .uio_out({6'b0, uio_out[1],1'b0}),
     .uio_in({7'b0, uio_in[0]}),
