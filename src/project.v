@@ -1,7 +1,7 @@
 module tt_um_sha256_shift_reg (
     input wire clk,
     input wire rst_n,
-    input wire [7:0] ui,
+    input wire [7:0] ui_in,
     input  wire [7:0] uio_in,   // IOs: Input path
     output reg [7:0] uio_out,  // IOs: Output path
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
@@ -141,7 +141,7 @@ always @(posedge clk or negedge rst_n) begin
                 uio_out[1] <= 0;
                 if (uio_in[0]) begin
                     // Shift in new byte
-                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui};
+                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui_in};
                     byte_count <= byte_count + 1;
                     state <= LOAD;
                     busy <= 1;
@@ -151,7 +151,7 @@ always @(posedge clk or negedge rst_n) begin
             LOAD: begin
                 if (uio_in[0]) begin
                     // Continue loading bytes
-                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui};
+                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui_in};
                     byte_count <= byte_count + 1;
                     
                     if (byte_count == 63) begin
