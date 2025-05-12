@@ -90,7 +90,7 @@ async def test_sha256(dut):
         
         # Send message to DUT
         await send_message(dut, message)
-        
+        """TP 1"""
         # Receive hash from DUT
         dut_hash = await receive_hash(dut)
         
