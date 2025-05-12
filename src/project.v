@@ -132,7 +132,7 @@ always @(posedge clk or negedge reset_n) begin
         round <= 0;
         state <= IDLE;
         output_count <= 0;
-        uio_[1] <= 0;
+        uio_out[1] <= 0;
         uo <= 0;
         busy <= 0;
     end else begin
