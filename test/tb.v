@@ -2,7 +2,7 @@ module tb();
 
 // DUT signals
 reg clk;
-reg reset_n;
+reg rst_n;
 reg ena;
 reg [7:0] ui;
 reg [7:0] uio_in;
@@ -19,7 +19,7 @@ integer errors;
 // Instantiate the DUT
 tt_um_sha256_shift_reg dut (
     .clk(clk),
-    .reset_n(reset_n),
+    .rst_n(rst_n),
     .ena(1'b1),
     .ui(ui),
     .uio_out({uio_out}),
