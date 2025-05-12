@@ -1,11 +1,9 @@
 module tt_um_sha256_shift_reg (
     input wire clk,
     input wire reset_n,
-    input wire [7:0] data_in,
-    input wire valid_in,
-    output reg [7:0] hash_out,
-    output reg valid_o
-    
+    input wire [7:0] ui,
+    inout wire [7:0] uio,
+    output reg [7:0] uo
 );
 reg busy;
 // SHA-256 constants - defined individually
@@ -131,16 +129,16 @@ always @(posedge clk or negedge reset_n) begin
         round <= 0;
         state <= IDLE;
         output_count <= 0;
-        valid_o <= 0;
-        hash_out <= 0;
+        uio[1] <= 0;
+        uo <= 0;
         busy <= 0;
     end else begin
         case (state)
             IDLE: begin
-                valid_o <= 0;
-                if (valid_in) begin
+                uio[1] <= 0;
+                if (uio[0]) begin
                     // Shift in new byte
-                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], data_in};
+                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui};
                     byte_count <= byte_count + 1;
                     state <= LOAD;
                     busy <= 1;
@@ -148,9 +146,9 @@ always @(posedge clk or negedge reset_n) begin
             end
             
             LOAD: begin
-                if (valid_in) begin
+                if (uio[0]) begin
                     // Continue loading bytes
-                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], data_in};
+                    w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui};
                     byte_count <= byte_count + 1;
                     
                     if (byte_count == 63) begin
@@ -256,46 +254,46 @@ always @(posedge clk or negedge reset_n) begin
             
             OUTPUT: begin
                 // Output hash in 8-bit chunks
-                valid_o <= 1;
+                uio[1] <= 1;
                 case (output_count)
-                    0: hash_out <= h0[31:24];
-                    1: hash_out <= h0[23:16];
-                    2: hash_out <= h0[15:8];
-                    3: hash_out <= h0[7:0];
-                    4: hash_out <= h1[31:24];
-                    5: hash_out <= h1[23:16];
-                    6: hash_out <= h1[15:8];
-                    7: hash_out <= h1[7:0];
-                    8: hash_out <= h2[31:24];
-                    9: hash_out <= h2[23:16];
-                    10: hash_out <= h2[15:8];
-                    11: hash_out <= h2[7:0];
-                    12: hash_out <= h3[31:24];
-                    13: hash_out <= h3[23:16];
-                    14: hash_out <= h3[15:8];
-                    15: hash_out <= h3[7:0];
-                    16: hash_out <= h4[31:24];
-                    17: hash_out <= h4[23:16];
-                    18: hash_out <= h4[15:8];
-                    19: hash_out <= h4[7:0];
-                    20: hash_out <= h5[31:24];
-                    21: hash_out <= h5[23:16];
-                    22: hash_out <= h5[15:8];
-                    23: hash_out <= h5[7:0];
-                    24: hash_out <= h6[31:24];
-                    25: hash_out <= h6[23:16];
-                    26: hash_out <= h6[15:8];
-                    27: hash_out <= h6[7:0];
-                    28: hash_out <= h7[31:24];
-                    29: hash_out <= h7[23:16];
-                    30: hash_out <= h7[15:8];
-                    31: hash_out <= h7[7:0];
+                    0: uo <= h0[31:24];
+                    1: uo <= h0[23:16];
+                    2: uo <= h0[15:8];
+                    3: uo <= h0[7:0];
+                    4: uo <= h1[31:24];
+                    5: uo <= h1[23:16];
+                    6: uo <= h1[15:8];
+                    7: uo <= h1[7:0];
+                    8: uo <= h2[31:24];
+                    9: uo <= h2[23:16];
+                    10: uo <= h2[15:8];
+                    11: uo <= h2[7:0];
+                    12: uo <= h3[31:24];
+                    13: uo <= h3[23:16];
+                    14: uo <= h3[15:8];
+                    15: uo <= h3[7:0];
+                    16: uo <= h4[31:24];
+                    17: uo <= h4[23:16];
+                    18: uo <= h4[15:8];
+                    19: uo <= h4[7:0];
+                    20: uo <= h5[31:24];
+                    21: uo <= h5[23:16];
+                    22: uo <= h5[15:8];
+                    23: uo <= h5[7:0];
+                    24: uo <= h6[31:24];
+                    25: uo <= h6[23:16];
+                    26: uo <= h6[15:8];
+                    27: uo <= h6[7:0];
+                    28: uo <= h7[31:24];
+                    29: uo <= h7[23:16];
+                    30: uo <= h7[15:8];
+                    31: uo <= h7[7:0];
                 endcase
                 
                 output_count <= output_count + 1;
                 if (output_count == 31) begin
                     state <= IDLE;
-                    valid_o <= 0;
+                    uio[1] <= 0;
                     busy <= 0;
                 end
             end
