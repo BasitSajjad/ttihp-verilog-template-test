@@ -1,6 +1,6 @@
 module tt_um_sha256_shift_reg (
     input wire clk,
-    input wire reset_n,
+    input wire rst_n,
     input wire [7:0] ui,
     input  wire [7:0] uio_in,   // IOs: Input path
     output reg [7:0] uio_out,  // IOs: Output path
@@ -119,8 +119,8 @@ function [31:0] maj;
     end
 endfunction
 
-always @(posedge clk or negedge reset_n) begin
-    if (!reset_n) begin
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
         // Reset all registers
         for (integer i = 0; i < 16; i = i + 1) w[i] <= 0;
         for (integer i = 0; i < 48; i = i + 1) w_ext[i] <= 0;
