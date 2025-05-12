@@ -47,7 +47,7 @@ async def send_message(dut, message):
     
     # End of message
     dut.uio_in[0].value = 0
-    dut.ui_invalue = 0
+    dut.ui_in.value = 0
 
 async def receive_hash(dut):
     """Receive the hash output from the DUT"""
