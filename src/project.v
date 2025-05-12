@@ -2,7 +2,10 @@ module tt_um_sha256_shift_reg (
     input wire clk,
     input wire reset_n,
     input wire [7:0] ui,
-    inout wire [7:0] uio,
+    input  wire [7:0] uio_in,   // IOs: Input path
+    output wire [7:0] uio_out,  // IOs: Output path
+    output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
+    input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     output reg [7:0] uo
 );
 reg busy;
@@ -129,14 +132,14 @@ always @(posedge clk or negedge reset_n) begin
         round <= 0;
         state <= IDLE;
         output_count <= 0;
-        uio[1] <= 0;
+        uio_[1] <= 0;
         uo <= 0;
         busy <= 0;
     end else begin
         case (state)
             IDLE: begin
-                uio[1] <= 0;
-                if (uio[0]) begin
+                uio_out[1] <= 0;
+                if (uio_in[0]) begin
                     // Shift in new byte
                     w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui};
                     byte_count <= byte_count + 1;
@@ -146,7 +149,7 @@ always @(posedge clk or negedge reset_n) begin
             end
             
             LOAD: begin
-                if (uio[0]) begin
+                if (uio_in[0]) begin
                     // Continue loading bytes
                     w[byte_count[3:0]] <= {w[byte_count[3:0]][23:0], ui};
                     byte_count <= byte_count + 1;
@@ -254,7 +257,7 @@ always @(posedge clk or negedge reset_n) begin
             
             OUTPUT: begin
                 // Output hash in 8-bit chunks
-                uio[1] <= 1;
+                uio_out[1] <= 1;
                 case (output_count)
                     0: uo <= h0[31:24];
                     1: uo <= h0[23:16];
@@ -293,7 +296,7 @@ always @(posedge clk or negedge reset_n) begin
                 output_count <= output_count + 1;
                 if (output_count == 31) begin
                     state <= IDLE;
-                    uio[1] <= 0;
+                    uio_out[1] <= 0;
                     busy <= 0;
                 end
             end
