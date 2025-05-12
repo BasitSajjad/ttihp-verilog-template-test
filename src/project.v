@@ -3,7 +3,7 @@ module tt_um_sha256_shift_reg (
     input wire reset_n,
     input wire [7:0] ui,
     input  wire [7:0] uio_in,   // IOs: Input path
-    output wire [7:0] uio_out,  // IOs: Output path
+    output reg [7:0] uio_out,  // IOs: Output path
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     output reg [7:0] uo
