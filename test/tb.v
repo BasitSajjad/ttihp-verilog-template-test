@@ -3,10 +3,10 @@ module tb();
 // DUT signals
 reg clk;
 reg reset_n;
-reg [7:0] data_in;
-reg valid_in;
-wire [7:0] hash_out;
-wire valid_o;
+reg [7:0] ui;
+reg [7:0] uio;
+wire [7:0] uo;
+
 
 // Test variables
 integer i, j;
@@ -18,9 +18,8 @@ integer errors;
 tt_um_sha256_shift_reg dut (
     .clk(clk),
     .reset_n(reset_n),
-    .data_in(data_in),
-    .valid_in(valid_in),
-    .hash_out(hash_out),
-    .valid_o(valid_o)
+    .ui(ui),
+    .uio({6'b0, uio[1],uio[0]}),
+    .uo(uo)
 );
 endmodule
