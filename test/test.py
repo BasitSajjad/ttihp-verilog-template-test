@@ -30,7 +30,7 @@ async def reset_dut(dut):
     """Reset the DUT"""
     dut.rst_n.value = 0
     dut.uio_in[0].value = 0
-    dut.ui_invalue = 0
+    dut.ui_in.value = 0
     await ClockCycles(dut.clk, 5)
     dut.rst_n.value = 1
     await ClockCycles(dut.clk, 2)
@@ -39,7 +39,7 @@ async def send_message(dut, message):
     """Send a message to the DUT byte by byte"""
     for byte in message:
         dut.uio_in[0].value = 1
-        dut.ui_invalue = byte
+        dut.ui_in.value = byte
         await RisingEdge(dut.clk)
         while dut.busy.value == 1:  # Wait if DUT is busy
             dut.uio_in[0].value = 0
