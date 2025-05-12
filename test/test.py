@@ -29,7 +29,7 @@ TEST_VECTORS = [
 async def reset_dut(dut):
     """Reset the DUT"""
     dut.reset_n.value = 0
-    dut.uio[0].value = 0
+    dut.uio_in[0].value = 0
     dut.ui.value = 0
     await ClockCycles(dut.clk, 5)
     dut.reset_n.value = 1
@@ -38,15 +38,15 @@ async def reset_dut(dut):
 async def send_message(dut, message):
     """Send a message to the DUT byte by byte"""
     for byte in message:
-        dut.uio[0].value = 1
+        dut.uio_in[0].value = 1
         dut.ui.value = byte
         await RisingEdge(dut.clk)
         while dut.busy.value == 1:  # Wait if DUT is busy
-            dut.uio[0].value = 0
+            dut.uio_in[0].value = 0
             await RisingEdge(dut.clk)
     
     # End of message
-    dut.uio[0].value = 0
+    dut.uio_in[0].value = 0
     dut.ui.value = 0
 
 async def receive_hash(dut):
@@ -56,7 +56,7 @@ async def receive_hash(dut):
     # Wait for valid output
     while True:
         await RisingEdge(dut.clk)
-        if dut.uio[1].value == 1:
+        if dut.uio_out[1].value == 1:
             break
     
     # Collect all 32 bytes
