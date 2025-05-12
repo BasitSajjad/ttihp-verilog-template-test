@@ -28,11 +28,11 @@ TEST_VECTORS = [
 
 async def reset_dut(dut):
     """Reset the DUT"""
-    dut.reset_n.value = 0
+    dut.rst_n.value = 0
     dut.uio_in[0].value = 0
     dut.ui.value = 0
     await ClockCycles(dut.clk, 5)
-    dut.reset_n.value = 1
+    dut.rst_n.value = 1
     await ClockCycles(dut.clk, 2)
 
 async def send_message(dut, message):
