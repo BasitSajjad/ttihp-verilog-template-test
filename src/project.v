@@ -303,5 +303,5 @@ always @(posedge clk or negedge rst_n) begin
         endcase
     end
 end
-
+    wire _unused = &{ena, uio_in, uio_oe[7:2], uio_out[7:2], 1'b0};
 endmodule
