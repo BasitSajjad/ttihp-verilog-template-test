@@ -132,7 +132,8 @@ always @(posedge clk or negedge rst_n) begin
         round <= 0;
         state <= IDLE;
         output_count <= 0;
-        uio_out[1] <= 0;
+        uio_out <= 8'b0;
+        uio_oe <= 8'b00000010;
         uo_out <= 0;
         busy <= 0;
     end else begin
