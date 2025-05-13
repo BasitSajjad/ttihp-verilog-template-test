@@ -118,7 +118,7 @@ function [31:0] maj;
         maj = (x & y) ^ (x & z) ^ (y & z);
     end
 endfunction
-
+assign  uio_oe = 8'b00000010;
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         // Reset all registers
@@ -133,7 +133,6 @@ always @(posedge clk or negedge rst_n) begin
         state <= IDLE;
         output_count <= 0;
         uio_out <= 8'b0;
-        uio_oe <= 8'b00000010;
         uo_out <= 0;
         busy <= 0;
     end else begin
